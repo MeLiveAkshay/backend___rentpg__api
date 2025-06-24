@@ -1,7 +1,7 @@
 from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404
 
-from owner.models import Room, Booking
+from owner.models import Room
 from dashboard.models import TeamMember
 from user.models import ContactDetails
 

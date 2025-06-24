@@ -1,5 +1,8 @@
 from django.db import models
 
+from owner.models import Room
+
+
 # Create your models here.
 class TeamMember(models.Model):
     member_id = models.AutoField(primary_key=True)
@@ -12,3 +15,8 @@ class TeamMember(models.Model):
 
     def __str__(self):
         return self.member_name
+
+
+
+
+
