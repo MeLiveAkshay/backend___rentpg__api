@@ -1,0 +1,201 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Home - RentPG
+{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+  <h1 class="mb-4 text-center text-primary fw-bold">🏠 Available Rooms</h1>
+
+  <!-- Filters -->
+  <form method="get" class="row gy-2 gx-3 align-items-center mb-4">
+    <div class="col-md-4">
+      <select name="room_type" class="form-select">
+        <option value="">All Room Types</option>
+        <option value="Single" {% if request.GET.room_type == 'Single' %}selected{% endif %}>Single</option>
+        <option value="Shared" {% if request.GET.room_type == 'Shared' %}selected{% endif %}>Shared</option>
+      </select>
+    </div>
+    <div class="col-md-4">
+      <input type="text" name="location" class="form-control" placeholder="Enter location" value="{{ request.GET.location }}">
+    </div>
+    <div class="col-md-4">
+      <button type="submit" class="btn btn-outline-primary w-100">
+        <i class="bi bi-filter me-1"></i>Apply Filters
+      </button>
+    </div>
+  </form>
+
+  <!-- Room Cards -->
+  <div class="row g-4">
+    {% for room in room_data %}
+    <div class="col-md-6 col-lg-4">
+      <div class="card h-100 border-0 shadow-sm rounded-4 transition">
+        <img src="{{ room.pg_image_url|default:'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800&q=60' }}"
+             class="card-img-top rounded-top-4"
+             alt="{{ room.pg_name }}"
+             style="height: 200px; object-fit: cover;" />
+
+        <div class="card-body d-flex flex-column p-4">
+          <h5 class="card-title text-dark fw-semibold">{{ room.pg_name }}</h5>
+          <span class="badge bg-secondary mb-2">{{ room.room_type }}</span>
+
+          <p class="card-text text-muted mb-2">
+            <i class="bi bi-geo-alt-fill me-1"></i><strong>Location:</strong> {{ room.room_location }}
+          </p>
+          <p class="card-text text-muted mb-2">
+            <i class="bi bi-check-circle me-1"></i><strong>Amenity:</strong> {{ room.amenity }}
+          </p>
+          <p class="card-text text-muted mb-2">
+            <i class="bi bi-lightning-fill me-1"></i><strong>Facility:</strong> {{ room.facility }}
+          </p>
+          <p class="card-text text-muted mb-2">
+            <i class="bi bi-person-fill me-1"></i><strong>Owner:</strong> {{ room.pg_owner.name }}
+          </p>
+
+          <div class="mt-auto">
+            <p class="card-text fs-5 fw-bold text-primary">₹{{ room.room_price }} <small class="text-muted">/ month</small></p>
+            <span class="badge {% if room.is_available == 'Yes' %}bg-success{% else %}bg-danger{% endif %}">
+              {{ room.is_available }}
+            </span>
+
+            <!-- Book Now Button -->
+            <a href="{% url 'book_room' room.room_id %}" class="btn btn-primary w-100 mt-3">
+              <i class="bi bi-calendar-check me-1"></i> Book Now
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <div class="text-center text-muted">No rooms available at the moment.</div>
+    {% endfor %}
+  </div>
+
+  <!-- Pagination -->
+  {% if room_data.has_other_pages %}
+  <nav class="mt-5">
+    <ul class="pagination justify-content-center">
+      {% if room_data.has_previous %}
+      <li class="page-item">
+        <a class="page-link" href="?{% if request.GET.room_type %}room_type={{ request.GET.room_type }}&{% endif %}{% if request.GET.location %}location={{ request.GET.location }}&{% endif %}page={{ room_data.previous_page_number }}">Previous</a>
+      </li>
+      {% endif %}
+
+      {% for num in room_data.paginator.page_range %}
+        {% if room_data.number == num %}
+        <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+        {% elif num > room_data.number|add:'-3' and num < room_data.number|add:'3' %}
+        <li class="page-item"><a class="page-link" href="?{% if request.GET.room_type %}room_type={{ request.GET.room_type }}&{% endif %}{% if request.GET.location %}location={{ request.GET.location }}&{% endif %}page={{ num }}">{{ num }}</a></li>
+        {% endif %}
+      {% endfor %}
+
+      {% if room_data.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?{% if request.GET.room_type %}room_type={{ request.GET.room_type }}&{% endif %}{% if request.GET.location %}location={{ request.GET.location }}&{% endif %}page={{ room_data.next_page_number }}">Next</a>
+      </li>
+      {% endif %}
+    </ul>
+  </nav>
+  {% endif %}
+</div>
+
+<!-- Our Team Section -->
+<section class="py-5 bg-white">
+  <div class="container">
+    <div class="row justify-content-center text-center mb-5">
+      <div class="col-lg-8">
+        <h2 class="fw-bold text-primary">Meet Our Team</h2>
+        <p class="lead text-muted mt-3">
+          A dedicated team of professionals working tirelessly to make your rental experience seamless.
+        </p>
+      </div>
+    </div>
+
+    <div class="row">
+      {% for m in member %}
+        <div class="col-md-4 mb-4">
+          <div class="card h-100 shadow-sm border-0">
+
+            <div class="card-body text-center">
+              <h5 class="card-title">{{ m.member_name }}</h5>
+              <p class="card-text fw-semibold">{{ m.member_role }}</p>
+              <p class="card-text text-muted">{{ m.member_bio }}</p>
+              <div class="d-flex justify-content-center">
+                {% if m.linkedin_link %}
+                  <a href="{{ m.linkedin_link }}" class="btn btn-outline-primary me-2" target="_blank">LinkedIn</a>
+                {% endif %}
+                {% if m.github_link %}
+                  <a href="{{ m.github_link }}" class="btn btn-outline-secondary" target="_blank">GitHub</a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+
+<section class="about-section py-5 bg-light">
+  <div class="container">
+    <div class="row justify-content-center text-center mb-5">
+      <div class="col-lg-8">
+        <h2 class="fw-bold text-primary">About RentPG Live</h2>
+        <p class="lead text-muted mt-3">
+          RentPG Live is a platform built for students and professionals to easily find verified PG accommodations.
+          Our mission is to bring <span class="fw-semibold text-dark">trust</span> and <span class="fw-semibold text-dark">simplicity</span> to the rental experience.
+        </p>
+      </div>
+    </div>
+
+    <div class="row text-center g-4">
+      <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-0 rounded-4">
+          <div class="card-body py-4 px-3">
+            <div class="mb-3 text-success fs-3">
+              <i class="bi bi-bullseye"></i>
+            </div>
+            <h5 class="card-title fw-bold text-success">Our Mission</h5>
+            <p class="card-text text-muted mt-2">
+              Making rental search stress-free with verified listings, real-time availability, and transparent details.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-0 rounded-4">
+          <div class="card-body py-4 px-3">
+            <div class="mb-3 text-success fs-3">
+              <i class="bi bi-eye-fill"></i>
+            </div>
+            <h5 class="card-title fw-bold text-success">Our Vision</h5>
+            <p class="card-text text-muted mt-2">
+              To be India’s most trusted PG rental platform for students and working individuals.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-0 rounded-4">
+          <div class="card-body py-4 px-3">
+            <div class="mb-3 text-success fs-3">
+              <i class="bi bi-heart-fill"></i>
+            </div>
+            <h5 class="card-title fw-bold text-success">Our Values</h5>
+            <p class="card-text text-muted mt-2">
+              We stand for Trust, Transparency, Innovation, and a User-first Experience in the digital rental space.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+{% endblock %}
