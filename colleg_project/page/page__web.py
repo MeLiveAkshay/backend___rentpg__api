@@ -35,3 +35,13 @@ def book_room(request, room_id):
     return render(request, 'booking_form.html', {
         'room': room
     })
+
+
+
+def about(request):
+    return  render(request,'about.html')
+
+
+
+def contact(request):
+    return  render(request,)
