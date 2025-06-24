@@ -16,19 +16,12 @@ class UserDetails(models.Model):
         return self.user_name
 
 
-class BookingDetails(models.Model):
-    booking_id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(UserDetails, on_delete=models.CASCADE)
-    room = models.ForeignKey(Room, on_delete=models.CASCADE)
 
-    customer_name = models.CharField(max_length=100)
-    customer_email = models.EmailField()
-    customer_phone = models.CharField(max_length=15)
+class ContactDetails(models.Model):
+    contact_id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    phone = models.CharField(max_length=15)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
 
-    check_in = models.DateField()
-    check_out = models.DateField()
-    booked_on = models.DateTimeField(auto_now_add=True)
-    is_confirmed = models.BooleanField(default=False)
-
-    def __str__(self):
-        return f"Booking #{self.booking_id} - {self.customer_name}"
