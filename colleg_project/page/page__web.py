@@ -1,7 +1,7 @@
 from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404
 
-from owner.models import Room
+from owner.models import Room, Booking
 from dashboard.models import TeamMember
 from user.models import ContactDetails
 
@@ -32,14 +32,13 @@ def home(request):
     })
 
 
-def book_room(request, room_id):
+def roomdetails(request, room_id):
     room = get_object_or_404(Room, pk=room_id)
-    return render(request, 'booking_form.html', {
-        'room': room
-    })
+    return render(request, 'room_details.html', {'room': room})
 
-
-
+def roombooking(request, room_id):
+    room = get_object_or_404(Room, pk=room_id)
+    return render(request,'room_booking.html', {'room': room})
 def about(request):
     return  render(request,'about.html')
 
