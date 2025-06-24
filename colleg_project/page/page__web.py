@@ -44,4 +44,29 @@ def about(request):
 
 
 def contact(request):
-    return  render(request,)
+    return  render(request,'contact.html')
+
+job_openings = [
+    {
+        'job_role': 'Web Developer',
+        'job_description': 'Build and maintain websites and web applications.'
+    },
+    {
+        'job_role': 'Frontend Developer',
+        'job_description': 'Develop engaging user interfaces using HTML, CSS, and JS frameworks.'
+    },
+    {
+        'job_role': 'Backend Developer',
+        'job_description': 'Build robust server-side applications and APIs.'
+    },
+    {
+        'job_role': 'UI/UX Designer',
+        'job_description': 'Design user-friendly interfaces and improve user experience.'
+    },
+    {
+        'job_role': 'Content Writer',
+        'job_description': 'Create engaging content for web, blogs, and social media.'
+    }
+]
+def career(request):
+    return render(request, 'career.html', {'job_openings': job_openings})

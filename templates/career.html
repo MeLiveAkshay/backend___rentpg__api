@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Career - RentPG
+{% endblock %}
+
+{% block content %}
+<main class="container my-5">
+    <div class="text-center mb-5">
+        <h2 class="text-primary fw-bold">We're Hiring!</h2>
+        <p class="fs-5">Join our growing team of talented members. We're looking for:</p>
+    </div>
+
+    <div class="row">
+        {% for job in job_openings %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-body">
+                    <h5 class="card-title fw-semibold">{{ job.job_role }}</h5>
+                    <p class="card-text text-muted">{{ job.job_description }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="text-center mt-4">
+        <p>Send your CV directly to
+            <a href="mailto:careers@rentpg.com" class="text-decoration-none fw-medium">careers@rentpg.com</a>
+        </p>
+    </div>
+</main>
+{% endblock %}
