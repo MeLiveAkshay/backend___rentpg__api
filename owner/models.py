@@ -1,6 +1,4 @@
 from django.db import models
-
-
 # Create your models here.
 
 
@@ -38,3 +36,32 @@ class Room(models.Model):
 
     def __str__(self):
         return f"{self.pg_name} - {self.room_type} - {self.room_location}"
+
+
+class RoomBooking(models.Model):
+    """
+    Booking module for room reservations.
+    """
+    booking_id = models.AutoField(primary_key=True)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='bookings')
+    name = models.CharField(max_length=100)
+    phone = models.CharField(max_length=15)
+    email = models.EmailField()
+    book_date = models.DateField(auto_now_add=True)
+    room_price = models.DecimalField(max_digits=10, decimal_places=2)
+    room_type = models.CharField(max_length=50)
+    booking_status = models.CharField(
+        max_length=20,
+        choices=[
+            ('Pending', 'Pending'),
+            ('Confirmed', 'Confirmed'),
+            ('Cancelled', 'Cancelled')
+        ],
+        default='Pending'
+    )
+
+    def __str__(self):
+        return f"Booking {self.booking_id} - {self.name} - {self.booking_status}"
+
+
+
