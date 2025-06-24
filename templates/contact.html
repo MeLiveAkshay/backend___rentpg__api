@@ -6,7 +6,59 @@ Contact - RentPG
 
 {% block content %}
 
-<p>Contact</p>
+<div class="container my-5">
+  <div class="row justify-content-center text-center mb-5">
+    <div class="col-lg-8">
+      <h2 class="fw-bold text-primary">Contact Us</h2>
+      <p class="lead text-muted mt-3">
+        For Suggestions, Complaints, or Feedback
+      </p>
+    </div>
+  </div>
 
+  {% if success %}
+  <div class="alert alert-success">
+    Thank you <strong>{{ name }}</strong>, we have received your message. We’ll contact you soon!
+  </div>
+  {% endif %}
+
+  <form method="POST" action="{% url 'contact' %}" class="row g-3" id="contactForm">
+    {% csrf_token %}
+
+    <div class="col-md-6">
+      <label for="name" class="form-label">Your Name</label>
+      <input type="text" class="form-control" id="name" name="name" value="{{ name|default_if_none:'' }}" required>
+    </div>
+
+    <div class="col-md-6">
+      <label for="email" class="form-label">Your Email</label>
+      <input type="email" class="form-control" id="email" name="email" value="{{ email|default_if_none:'' }}" required>
+    </div>
+
+    <div class="col-md-6">
+      <label for="phone" class="form-label">Phone Number</label>
+      <input type="tel" class="form-control" id="phone" name="phone" value="{{ phone|default_if_none:'' }}" required>
+    </div>
+
+    <div class="col-12">
+      <label for="message" class="form-label">Your Message</label>
+      <textarea class="form-control" id="message" name="message" rows="5" required>{{ message|default_if_none:'' }}</textarea>
+    </div>
+
+    <div class="col-12">
+      <button type="submit" class="btn btn-primary">Send Message</button>
+      <button type="reset" class="btn btn-secondary ms-2">Clear</button>
+    </div>
+  </form>
+</div>
+
+{% if success %}
+<script>
+  // Auto-clear form after successful submission
+  document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("contactForm").reset();
+  });
+</script>
+{% endif %}
 
 {% endblock %}

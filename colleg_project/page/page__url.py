@@ -5,4 +5,6 @@ urlpatterns = [
     path('', page__web.home),  # No leading slash
     path('book/<int:room_id>/', page__web.book_room, name='book_room'),
     path('about/', page__web.about, name='about'),
+    path('contact/', page__web.contact, name='contact'),
+    path('careers/', page__web.career, name='career'),
 ]
