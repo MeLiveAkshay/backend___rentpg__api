@@ -1,7 +1,7 @@
 from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404
 
-from owner.models import Room, Booking
+from owner.models import Room, Booking, RoomBooked
 from dashboard.models import TeamMember
 from user.models import ContactDetails
 
@@ -127,7 +127,18 @@ def booked(request, room_id):
         email = request.POST.get('email')
         phone = request.POST.get('phone')
 
-
+        booking = RoomBooked.objects.create(
+            booking_id=booking_id,
+            room=room,
+            location=location,
+            pg_name=pg_name,
+            pg_owner=pg_owner,
+            room_type=room_type,
+            room_price=room_price,
+            name=name,
+            email=email,
+            phone=phone,
+        )
         context = {
             'booking_id': booking_id,
             'room': room,
