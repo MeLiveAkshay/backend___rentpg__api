@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-  {{Booking }} - RentPG
+  Book {{ room.pg_name }} - RentPG
 {% endblock %}
 
 {% block content %}
@@ -14,25 +14,15 @@
            class="img-fluid rounded mb-4 shadow-sm" alt="{{ room.pg_name }}">
     </div>
 
-    <!-- Room Details -->
+    <!-- Room Details and Booking Form -->
     <div class="col-md-6">
       <h2 class="mb-3">{{ room.pg_name }}</h2>
       <ul class="list-group list-group-flush mb-3">
-        <li class="list-group-item">
-          <strong>Owner Name:</strong> {{ room.pg_owner.name }}
-        </li>
-        <li class="list-group-item">
-          <strong>Room Type:</strong> {{ room.room_type }}
-        </li>
-        <li class="list-group-item">
-          <strong>Location:</strong> {{ room.room_location }}
-        </li>
-        <li class="list-group-item">
-          <strong>Facilities:</strong> {{ room.facility }}
-        </li>
-        <li class="list-group-item">
-          <strong>Amenities:</strong> {{ room.amenity }}
-        </li>
+        <li class="list-group-item"><strong>Owner Name:</strong> {{ room.pg_owner.name }}</li>
+        <li class="list-group-item"><strong>Room Type:</strong> {{ room.room_type }}</li>
+        <li class="list-group-item"><strong>Location:</strong> {{ room.room_location }}</li>
+        <li class="list-group-item"><strong>Facilities:</strong> {{ room.facility }}</li>
+        <li class="list-group-item"><strong>Amenities:</strong> {{ room.amenity }}</li>
         <li class="list-group-item d-flex justify-content-between align-items-center">
           <span><strong>Availability:</strong></span>
           <span class="badge {% if room.is_available == 'Yes' %}bg-success{% else %}bg-danger{% endif %} fs-6">
@@ -44,11 +34,41 @@
         </li>
       </ul>
 
-      <a href="{% url 'room_booking' room.room_id %}" class="btn btn-primary btn-lg">
-        <i class="bi bi-calendar-check me-1"></i> Book Now
-      </a>
-    </div>
 
+    </div>
+<!-- Booking Form -->
+      {% if room.is_available == 'Yes' %}
+      <form method="post" action="{% url 'booking_success' room.room_id %}" class="mt-4">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label for="name" class="form-label">Your Full Name</label>
+          <input type="text" class="form-control" id="name" name="name" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="email" class="form-label">Email Address</label>
+          <input type="email" class="form-control" id="email" name="email" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="phone" class="form-label">Phone Number</label>
+          <input type="text" class="form-control" id="phone" name="phone" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="move_in_date" class="form-label">Preferred Move-in Date</label>
+          <input type="date" class="form-control" id="move_in_date" name="move_in_date" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg w-100">
+          <i class="bi bi-calendar-check me-1"></i> Confirm Booking
+        </button>
+      </form>
+      {% else %}
+        <div class="alert alert-warning mt-3">
+          This room is currently not available for booking.
+        </div>
+      {% endif %}
   </div>
 </div>
 {% endblock %}

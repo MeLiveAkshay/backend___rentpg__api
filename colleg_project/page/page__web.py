@@ -32,9 +32,11 @@ def home(request):
     })
 
 
-def roomdetails(request, room_id):
-    room = get_object_or_404(Room, pk=room_id)
-    return render(request, 'room_details.html', {'room': room})
+
+# def roomdetails(request, room_id):
+#     room = get_object_or_404(Room, pk=room_id)
+#     return render(request, 'room_booking.html', {'room': room})
+
 
 def roombooking(request, room_id):
     room = get_object_or_404(Room, pk=room_id)
@@ -91,3 +93,55 @@ job_openings = [
 ]
 def career(request):
     return render(request, 'career.html', {'job_openings': job_openings})
+
+
+#
+# def bookroom(request, room_id):
+#     return  render(request,'booked_room.html', {'room_id': room_id})
+
+import random
+import string
+from django.shortcuts import render, get_object_or_404
+ # Adjust this import if Room is in another app/module
+
+
+def generate_booking_id():
+    return ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
+
+
+def booked(request, room_id):
+    room = get_object_or_404(Room, pk=room_id)
+
+    if request.method == 'POST':
+        booking_id = generate_booking_id()
+
+        # Extracting room details
+        location = room.room_location
+        pg_name = room.pg_name
+        pg_owner = room.pg_owner
+        room_price = room.room_price
+        room_type = room.room_type
+
+        # User-submitted form data
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        phone = request.POST.get('phone')
+
+
+        context = {
+            'booking_id': booking_id,
+            'room': room,
+            'location': location,
+            'pg_name': pg_name,
+            'pg_owner': pg_owner,
+            'room_price': room_price,
+            'room_type': room_type,
+            'name': name,
+            'email': email,
+            'phone': phone,
+
+        }
+
+        return render(request, 'booking_success.html', context)
+
+    return render(request, 'booking_success.html', {'room_id': room_id})

@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Booking Receipt - RentPG
+{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-header bg-gradient bg-success text-white rounded-top-4">
+                    <h4 class="mb-0 d-flex align-items-center">
+                        <i class="bi bi-check-circle-fill me-2"></i> Booking Confirmed
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    <div class="mb-4 text-center">
+                        <p class="text-muted mb-1">Your booking has been successfully processed.</p>
+                        <h5 class="text-primary">Booking ID: <strong>{{ booking_id }}</strong></h5>
+                    </div>
+
+                    <h6 class="text-secondary mb-2">Guest Information</h6>
+                    <ul class="list-group list-group-flush mb-4">
+                        <li class="list-group-item"><strong>Name:</strong> {{ name }}</li>
+                        <li class="list-group-item"><strong>Email:</strong> {{ email }}</li>
+                        <li class="list-group-item"><strong>Phone:</strong> {{ phone }}</li>
+                    </ul>
+
+                    <h6 class="text-secondary mb-2">Room Details</h6>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><strong>Location:</strong> {{ location }}</li>
+                        <li class="list-group-item"><strong>PG Name:</strong> {{ pg_name }}</li>
+                        <li class="list-group-item"><strong>Owner:</strong> {{ pg_owner }}</li>
+                        <li class="list-group-item"><strong>Room Type:</strong> {{ room_type }}</li>
+                        <li class="list-group-item"><strong>Price:</strong> ₹{{ room_price }}/Months</li>
+                    </ul>
+
+                    <div class="mt-4 text-center">
+                        <a href="{% url 'index' %}" class="btn btn-outline-success">Back to Home</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
