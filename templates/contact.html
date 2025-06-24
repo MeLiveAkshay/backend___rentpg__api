@@ -5,8 +5,41 @@ Contact - RentPG
 {% endblock %}
 
 {% block content %}
+<div class="container my-5">
+    <h2 class="mb-4">Contact Us</h2>
 
-<p>Contact</p>
+    {% if success %}
+    <div class="alert alert-success">
+        Thank you <strong>{{ name }}</strong>, we have received your message. We’ll contact you soon!
+    </div>
+    {% endif %}
 
+    <form method="POST" action="{% url 'contact' %}" class="row g-3">
+        {% csrf_token %}
 
+        <div class="col-md-6">
+            <label for="name" class="form-label">Your Name</label>
+            <input type="text" class="form-control" id="name" name="name" value="{{ name|default:'' }}" required>
+        </div>
+
+        <div class="col-md-6">
+            <label for="email" class="form-label">Your Email</label>
+            <input type="email" class="form-control" id="email" name="email" value="{{ email|default:'' }}" required>
+        </div>
+
+        <div class="col-md-6">
+            <label for="phone" class="form-label">Your Phone (optional)</label>
+            <input type="text" class="form-control" id="phone" name="phone" value="{{ phone|default:'' }}">
+        </div>
+
+        <div class="col-12">
+            <label for="message" class="form-label">Your Message</label>
+            <textarea class="form-control" id="message" name="message" rows="5" required>{{ message|default:'' }}</textarea>
+        </div>
+
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Send Message</button>
+        </div>
+    </form>
+</div>
 {% endblock %}

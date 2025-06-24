@@ -3,7 +3,7 @@ from django.shortcuts import render, get_object_or_404
 
 from owner.models import Room
 from dashboard.models import TeamMember
-
+from user.models import ContactDetails
 def home(request):
     # Filter parameters
     room_type = request.GET.get('room_type')
@@ -44,4 +44,21 @@ def about(request):
 
 
 def contact(request):
-    return  render(request,'contact.html')
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        phone = request.POST.get('phone')
+        message = request.POST.get('message')
+
+        ContactDetails.objects.create(name=name, email=email, phone=phone, message=message)
+
+        context = {
+            'success': True,
+            'name': name,
+            'email': email,
+            'phone': phone,
+            'message': message,
+        }
+        return render(request, 'contact.html', context)
+
+    return render(request, 'contact.html')
