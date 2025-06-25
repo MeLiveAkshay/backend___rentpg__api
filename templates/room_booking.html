@@ -34,11 +34,9 @@
         </li>
       </ul>
 
-
-    </div>
-<!-- Booking Form -->
+      <!-- Booking Form -->
       {% if room.is_available == 'Yes' %}
-      <form method="post" action="{% url 'booking_success' room.room_id %}" class="mt-4">
+      <form id="bookingForm" class="mt-4">
         {% csrf_token %}
         <div class="mb-3">
           <label for="name" class="form-label">Your Full Name</label>
@@ -60,7 +58,7 @@
           <input type="date" class="form-control" id="move_in_date" name="move_in_date" required>
         </div>
 
-        <button type="submit" class="btn btn-primary btn-lg w-100">
+        <button type="submit" class="btn btn-primary btn-lg w-100 bookingRoom">
           <i class="bi bi-calendar-check me-1"></i> Confirm Booking
         </button>
       </form>
@@ -69,6 +67,49 @@
           This room is currently not available for booking.
         </div>
       {% endif %}
+    </div>
+
   </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const bookingForm = document.getElementById('bookingForm');
+
+    if (bookingForm) {
+        bookingForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const formData = new FormData();
+            formData.append('room_id', '{{ room.room_id }}');
+            formData.append('location', '{{ room.room_location }}');
+            formData.append('pg_name', '{{ room.pg_name }}');
+            formData.append('pg_owner', '{{ room.pg_owner.name }}');
+            formData.append('room_type', '{{ room.room_type }}');
+            formData.append('room_price', '{{ room.room_price }}');
+            formData.append('name', document.getElementById('name').value);
+            formData.append('email', document.getElementById('email').value);
+            formData.append('phone', document.getElementById('phone').value);
+
+            fetch('http://127.0.0.1:8000/api/insert/booking/', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alert('Booking successful! Booking ID: ' + data.booking_id);
+                    window.location.reload();
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An unexpected error occurred.');
+            });
+        });
+    }
+});
+</script>
 {% endblock %}

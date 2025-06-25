@@ -1,9 +1,9 @@
 from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404
 
-from owner.models import Room, Booking, RoomBooked
+from owner.models import Room, Booking
 from dashboard.models import TeamMember
-from user.models import ContactDetails
+from user.models import ContactDetails, RoomBooked
 
 
 def home(request):
@@ -109,50 +109,4 @@ def generate_booking_id():
     return ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
 
 
-def booked(request, room_id):
-    room = get_object_or_404(Room, pk=room_id)
 
-    if request.method == 'POST':
-        booking_id = generate_booking_id()
-
-        # Extracting room details
-        location = room.room_location
-        pg_name = room.pg_name
-        pg_owner = room.pg_owner
-        room_price = room.room_price
-        room_type = room.room_type
-
-        # User-submitted form data
-        name = request.POST.get('name')
-        email = request.POST.get('email')
-        phone = request.POST.get('phone')
-
-        booking = RoomBooked.objects.create(
-            booking_id=booking_id,
-            room=room,
-            location=location,
-            pg_name=pg_name,
-            pg_owner=pg_owner,
-            room_type=room_type,
-            room_price=room_price,
-            name=name,
-            email=email,
-            phone=phone,
-        )
-        context = {
-            'booking_id': booking_id,
-            'room': room,
-            'location': location,
-            'pg_name': pg_name,
-            'pg_owner': pg_owner,
-            'room_price': room_price,
-            'room_type': room_type,
-            'name': name,
-            'email': email,
-            'phone': phone,
-
-        }
-
-        return render(request, 'booking_success.html', context)
-
-    return render(request, 'booking_success.html', {'room_id': room_id})
