@@ -11,6 +11,6 @@ urlpatterns = [
 
     #path('room-details/<int:room_id>/', page__web.roomdetails, name='room_details'),
    path('room_booking/<int:room_id>/', page__web.roombooking, name='room_booking'),
-    path('booking_success/<int:room_id>/', page__web.booked, name='booking_success'),
+    # path('booking_success/<int:room_id>/', page__web.booked, name='booking_success'),
 
 ]
